@@ -8,7 +8,7 @@ module Pushr
     end
 
     def to_json
-      ::MultiJson.dump({gem: 'push-gcm', type: self.class.to_s, app: @app, enabled: @enabled, connections: @connections, key: @key})
+      ::MultiJson.dump({gem: 'pushr-gcm', type: self.class.to_s, app: @app, enabled: @enabled, connections: @connections, key: @key})
     end
   end
 end
