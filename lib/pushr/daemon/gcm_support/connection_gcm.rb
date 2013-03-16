@@ -58,7 +58,7 @@ module Pushr
               # MessageTooBig, TODO: add validation
 
               if msg == "NotRegistered" or msg == "InvalidRegistration"
-                Pushr::FeedbackGcm.new(app: @configuration.name, failed_at: Time.now, device: notification.device, follow_up: 'delete').save
+                Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'delete').save
               end
 
               Pushr::Daemon.logger.error("[#{@name}] Error received.")
@@ -66,7 +66,7 @@ module Pushr
             elsif hsh["canonical_ids"] == 1
               # success, but update device token
               update_to = hsh["results"][0]["registration_id"]
-              Pushr::FeedbackGcm.new(app: @configuration.name, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to).save
+              Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to).save
             end
           else
             Pushr::Daemon.logger.error("[#{@name}] Error received.")
