@@ -7,7 +7,7 @@ module Pushr
     attr_accessor :type, :app, :device, :collapse_key, :delay_when_idle, :time_to_live, :payload
 
     def to_message
-      hsh = Hash.new
+      hsh = {}
       hsh['registration_ids'] = [device]
       hsh['collapse_key'] = collapse_key if collapse_key
       hsh['delay_when_idle'] = delay_when_idle if delay_when_idle
@@ -17,7 +17,9 @@ module Pushr
     end
 
     def to_json
-      MultiJson.dump({ type: self.class.to_s, app: @app, device: @device, collapse_key: @collapse_key, delay_when_idle: @delay_when_idle, time_to_live: @time_to_live, payload: @payload })
+      hsh = { type: self.class.to_s, app: app, device: device, collapse_key: collapse_key, delay_when_idle: delay_when_idle,
+        time_to_live: time_to_live, payload: payload }
+      MultiJson.dump(hshw)
     end
   end
 end

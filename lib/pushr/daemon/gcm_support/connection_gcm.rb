@@ -5,7 +5,7 @@ module Pushr
 
       class ConnectionGcm
         attr_reader :response, :name, :configuration
-        PUSH_URL = "https://android.googleapis.com/gcm/send"
+        PUSH_URL = 'https://android.googleapis.com/gcm/send'
         IDLE_PERIOD = 5 * 60
 
         def initialize(configuration, i)
@@ -48,29 +48,29 @@ module Pushr
         end
 
         def check_for_error(notification)
-          if @response.code.eql? "200"
+          if @response.code.eql? '200'
             hsh = MultiJson.load(@response.body)
-            if hsh["failure"] == 1
-              msg = hsh["results"][0]["error"]
+            if hsh['failure'] == 1
+              msg = hsh['results'][0]['error']
 
               # MissingRegistration, handled by validation
               # MismatchSenderId, configuration error by client
               # MessageTooBig, TODO: add validation
 
-              if msg == "NotRegistered" or msg == "InvalidRegistration"
+              if msg == 'NotRegistered' or msg == 'InvalidRegistration'
                 Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'delete').save
               end
 
               Pushr::Daemon.logger.error("[#{@name}] Error received.")
-              raise Pushr::DeliveryError.new(@response.code, nil, msg, "GCM", false)
-            elsif hsh["canonical_ids"] == 1
+              fail Pushr::DeliveryError.new(@response.code, nil, msg, 'GCM', false)
+            elsif hsh['canonical_ids'] == 1
               # success, but update device token
-              update_to = hsh["results"][0]["registration_id"]
+              update_to = hsh['results'][0]['registration_id']
               Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to).save
             end
           else
             Pushr::Daemon.logger.error("[#{@name}] Error received.")
-            raise Pushr::DeliveryError.new(@response.code, nil, @response.message, "GCM", false)
+            fail Pushr::DeliveryError.new(@response.code, nil, @response.message, 'GCM', false)
           end
         end
 
@@ -79,13 +79,13 @@ module Pushr
         def open_http(host, port)
           http = Net::HTTP.new(host, port)
           http.use_ssl = true
-          return http
+          http
         end
 
         def notification_request(data)
-          headers = { "Authorization" => "key=#{@configuration.key}",
-                     "Content-type" => "application/json",
-                     "Content-length" => "#{data.length}" }
+          headers = { 'Authorization' => "key=#{@configuration.key}",
+                      'Content-type' => 'application/json',
+                      'Content-length' => "#{data.length}" }
           uri = URI.parse(PUSH_URL)
           post(uri, data, headers)
         end
@@ -108,7 +108,7 @@ module Pushr
               sleep 1
               retry
             else
-              raise ConnectionError, "#{@name} tried #{retry_count-1} times to reconnect but failed (#{e.class.name})."
+              raise ConnectionError, "#{@name} tried #{retry_count - 1} times to reconnect but failed (#{e.class.name})."
             end
           end
 
