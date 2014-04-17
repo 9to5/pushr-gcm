@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source 'http://rubygems.org'
 
 # Declare your gem's dependencies in push-gcm.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -10,7 +10,6 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
-gem 'pushr-core', :path => "~/code/pushr/pushr-core"
+gem 'pushr-core', path: '../pushr-core'
+gem 'coveralls', require: false
+gem 'rubocop'
