@@ -18,8 +18,8 @@ module Pushr
 
     def to_json
       hsh = { type: self.class.to_s, app: app, device: device, collapse_key: collapse_key, delay_when_idle: delay_when_idle,
-        time_to_live: time_to_live, payload: payload }
-      MultiJson.dump(hshw)
+              time_to_live: time_to_live, payload: payload }
+      MultiJson.dump(hsh)
     end
   end
 end
