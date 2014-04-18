@@ -12,6 +12,7 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
 ]
 SimpleCov.start
 
+require 'vcr'
 require 'pushr'
 require 'mock_redis'
 

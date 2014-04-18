@@ -26,4 +26,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'mock_redis'
   s.add_development_dependency 'simplecov'
+  s.add_development_dependency 'webmock', '< 1.16'
+  s.add_development_dependency 'vcr'
 end
