@@ -1,25 +1,48 @@
 module Pushr
   class MessageGcm < Pushr::Message
     POSTFIX = 'gcm'
-    # TODO: validates max size -> The message size limit is 4096 bytes.
-    # The total size of the payload data that is included in a message can't exceed 4096 bytes.
-    # Note that this includes both the size of the keys as well as the values.
-    attr_accessor :type, :app, :device, :collapse_key, :delay_when_idle, :time_to_live, :payload
+
+    validates :registration_ids, presence: true
+    validate :registration_ids_array
+    validate :data_size
+    validates :delay_while_idle, :dry_run, inclusion: { in: [true, false] }, allow_blank: true
+    validates :time_to_live, numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 2419200 },
+                             allow_blank: true
+
+    attr_accessor :type, :app, :registration_ids, :notification_key, :collapse_key, :delay_while_idle, :time_to_live, :data,
+                  :restricted_package_name, :dry_run
 
     def to_message
       hsh = {}
-      hsh['registration_ids'] = [device]
-      hsh['collapse_key'] = collapse_key if collapse_key
-      hsh['delay_when_idle'] = delay_when_idle if delay_when_idle
-      hsh['time_to_live'] = time_to_live if time_to_live
-      hsh['data'] = payload
+      hsh['registration_ids'] = registration_ids
+      %w(notification_key collapse_key delay_while_idle time_to_live data restricted_package_name dry_run).each do |variable|
+        hsh[variable] = send(variable) if send(variable)
+      end
       MultiJson.dump(hsh)
     end
 
     def to_json
-      hsh = { type: self.class.to_s, app: app, device: device, collapse_key: collapse_key, delay_when_idle: delay_when_idle,
-              time_to_live: time_to_live, payload: payload }
+      hsh = { type: self.class.to_s, app: app, registration_ids: registration_ids, notification_key: notification_key,
+              collapse_key: collapse_key, delay_while_idle: delay_while_idle, time_to_live: time_to_live, data: data }
       MultiJson.dump(hsh)
+    end
+
+    private
+
+    def registration_ids_array
+      if registration_ids.class == Array
+        if registration_ids.size > 1000
+          errors.add(:registration_ids, 'is too big (max 1000)')
+        elsif registration_ids.size == 0
+          errors.add(:registration_ids, 'is too small (min 1)')
+        end
+      else
+        errors.add(:registration_ids, 'is not an array') unless registration_ids.class == Array
+      end
+    end
+
+    def data_size
+      errors.add(:data, 'is more thank 4kb') if data && MultiJson.dump(data).bytes.size > 4096
     end
   end
 end

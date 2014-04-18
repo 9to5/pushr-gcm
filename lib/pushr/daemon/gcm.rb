@@ -10,7 +10,9 @@ module Pushr
         GcmSupport::ConnectionGcm
       end
 
-      def stop; end
+      def stop
+        true
+      end
     end
   end
 end

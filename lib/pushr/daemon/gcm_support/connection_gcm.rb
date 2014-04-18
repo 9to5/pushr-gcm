@@ -22,7 +22,7 @@ module Pushr
         end
 
         def write(data)
-          @response = notification_request(data)
+          @response = notification_request(data.to_message)
 
           # if @response.code.eql? "200"
           #   puts "success, but can have an exception in "
@@ -57,7 +57,7 @@ module Pushr
               # MismatchSenderId, configuration error by client
               # MessageTooBig, TODO: add validation
 
-              if msg == 'NotRegistered' or msg == 'InvalidRegistration'
+              if msg == 'NotRegistered' || msg == 'InvalidRegistration'
                 Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'delete').save
               end
 
@@ -66,7 +66,8 @@ module Pushr
             elsif hsh['canonical_ids'] == 1
               # success, but update device token
               update_to = hsh['results'][0]['registration_id']
-              Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to).save
+              hsh = { app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to }
+              Pushr::FeedbackGcm.new(hsh).save
             end
           else
             Pushr::Daemon.logger.error("[#{@name}] Error received.")

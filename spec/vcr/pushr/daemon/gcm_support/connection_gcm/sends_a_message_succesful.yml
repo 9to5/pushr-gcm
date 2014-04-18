@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://android.googleapis.com/gcm/send
+    body:
+      encoding: UTF-8
+      string: '{"registration_ids":["devicetoken"],"collapse_key":"x","time_to_live":86400,"data":{"test":"test"}}'
+    headers:
+      Authorization:
+      - key=apikey
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '250'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Thu, 17 Apr 2014 20:38:18 GMT
+      Expires:
+      - Thu, 17 Apr 2014 20:38:18 GMT
+      Cache-Control:
+      - private, max-age=0
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      Server:
+      - GSE
+      Alternate-Protocol:
+      - 443:quic
+      Transfer-Encoding:
+      - chunked
+    body:
+      encoding: UTF-8
+      string: '{"multicast_id":7726000338213371155,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1397767098298993%00525e0300000078"}]}'
+    http_version:
+  recorded_at: Thu, 17 Apr 2014 20:38:17 GMT
+recorded_with: VCR 2.9.0
