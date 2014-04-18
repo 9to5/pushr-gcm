@@ -83,7 +83,7 @@ module Pushr
         end
 
         def notification_request(data)
-          headers = { 'Authorization' => "key=#{@configuration.key}",
+          headers = { 'Authorization' => "key=#{@configuration.api}",
                       'Content-type' => 'application/json',
                       'Content-length' => "#{data.length}" }
           uri = URI.parse(PUSH_URL)
