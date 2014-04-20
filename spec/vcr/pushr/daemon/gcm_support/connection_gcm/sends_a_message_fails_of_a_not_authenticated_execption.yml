@@ -21,15 +21,15 @@ http_interactions:
       - Ruby
   response:
     status:
-      code: 200
-      message: OK
+      code: 401
+      message: Unauthorized
     headers:
       Content-Type:
-      - application/json; charset=UTF-8
+      - text/html; charset=UTF-8
       Date:
-      - Thu, 17 Apr 2014 20:38:18 GMT
+      - Sun, 20 Apr 2014 18:31:58 GMT
       Expires:
-      - Thu, 17 Apr 2014 20:38:18 GMT
+      - Sun, 20 Apr 2014 18:31:58 GMT
       Cache-Control:
       - private, max-age=0
       X-Content-Type-Options:
@@ -46,7 +46,16 @@ http_interactions:
       - chunked
     body:
       encoding: UTF-8
-      string: '{"multicast_id":7726000338213371155,"success":1,"failure":0,"canonical_ids":0,"results":[{"message_id":"0:1397767098298993%00525e0300000078"}]}'
-    http_version:
-  recorded_at: Thu, 17 Apr 2014 20:38:17 GMT
+      string: |
+        <HTML>
+        <HEAD>
+        <TITLE>Unauthorized</TITLE>
+        </HEAD>
+        <BODY BGCOLOR="#FFFFFF" TEXT="#000000">
+        <H1>Unauthorized</H1>
+        <H2>Error 401</H2>
+        </BODY>
+        </HTML>
+    http_version: 
+  recorded_at: Sun, 20 Apr 2014 18:31:58 GMT
 recorded_with: VCR 2.9.0

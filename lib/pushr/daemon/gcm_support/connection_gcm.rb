@@ -22,60 +22,59 @@ module Pushr
         end
 
         def write(data)
-          @response = notification_request(data.to_message)
-
-          # if @response.code.eql? "200"
-          #   puts "success, but can have an exception in "
-          # elsif @response.code.eql? "400"
-          #   puts "formatting exception"
-          # elsif @response.code.eql? "401"
-          #   puts "authentication exception"
-          # elsif @response.code.eql? "500"
-          #   puts "internal error GCM server"
-          # elsif response.code.eql? "503"
-          #   puts "service un-available: exponential back-off"
-          #
-          #   # do not retry for now
-          #
-          #   # @response.header.each_header do |key, value|
-          #   #   if key.capitalize == "Retry-After".capitalize
-          #   #     # TODO USE DELAY
-          #   #     @delay_by = value
-          #   #   end
-          #   # end
-          #   # TODO or exponentional back-off
-          # end
-        end
-
-        def check_for_error(notification)
-          if @response.code.eql? '200'
-            hsh = MultiJson.load(@response.body)
-            if hsh['failure'] == 1
-              msg = hsh['results'][0]['error']
-
-              # MissingRegistration, handled by validation
-              # MismatchSenderId, configuration error by client
-              # MessageTooBig, TODO: add validation
-
-              if msg == 'NotRegistered' || msg == 'InvalidRegistration'
-                Pushr::FeedbackGcm.new(app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'delete').save
-              end
-
-              Pushr::Daemon.logger.error("[#{@name}] Error received.")
-              fail Pushr::DeliveryError.new(@response.code, nil, msg, 'GCM', false)
-            elsif hsh['canonical_ids'] == 1
-              # success, but update device token
-              update_to = hsh['results'][0]['registration_id']
-              hsh = { app: @configuration.app, failed_at: Time.now, device: notification.device, follow_up: 'update', update_to: update_to }
-              Pushr::FeedbackGcm.new(hsh).save
+          retry_count = 0
+          begin
+            response = notification_request(data.to_message)
+            handle_response(response, data, retry_count)
+          rescue => e
+            retry_count += 1
+            if retry_count < 10
+              retry
+            else
+              raise e
             end
-          else
-            Pushr::Daemon.logger.error("[#{@name}] Error received.")
-            fail Pushr::DeliveryError.new(@response.code, nil, @response.message, 'GCM', false)
           end
         end
 
         private
+
+        def handle_response(response, data, retry_count)
+          if response.code.eql? '200'
+            handler = Pushr::Daemon::GcmSupport::ResponseHandler.new(response, data)
+            handler.handle
+          else
+            handle_error_response(response, data, retry_count)
+          end
+        end
+
+        def handle_error_response(response, data, retry_count)
+          case response.code.to_i
+          when 400
+            Pushr::Daemon.logger.error("[#{@name}] JSON formatting exception received.")
+          when 401
+            Pushr::Daemon.logger.error("[#{@name}] Authentication exception received.")
+          when 500..599
+            # internal error GCM server || service unavailable: exponential back-off
+            handle_error_5xx_response(response, retry_count)
+          else
+            Pushr::Daemon.logger.error("[#{@name}] Unknown error: #{response.code} #{response.message}")
+          end
+        end
+
+        # sleep if there is a Retry-After header
+        def handle_error_5xx_response(response, retry_count)
+          if response.header['Retry-After']
+            value = response.header['Retry-After']
+
+            if value.to_i > 0 # Retry-After: 120
+              sleep value.to_i
+            elsif Date.rfc2822(value) # Retry-After: Fri, 31 Dec 1999 23:59:59 GMT
+              sleep Time.now.utc - Date.rfc2822(value).to_time.utc
+            end
+          else
+            sleep 2**retry_count
+          end
+        end
 
         def open_http(host, port)
           http = Net::HTTP.new(host, port)

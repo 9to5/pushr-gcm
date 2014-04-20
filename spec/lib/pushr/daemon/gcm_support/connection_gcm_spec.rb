@@ -3,6 +3,8 @@ require 'pushr/daemon'
 require 'pushr/daemon/logger'
 require 'pushr/message_gcm'
 require 'pushr/configuration_gcm'
+require 'pushr/daemon/delivery_error'
+require 'pushr/daemon/gcm_support/response_handler'
 require 'pushr/daemon/gcm_support/connection_gcm'
 
 describe Pushr::Daemon::GcmSupport::ConnectionGcm do
@@ -32,8 +34,38 @@ describe Pushr::Daemon::GcmSupport::ConnectionGcm do
 
     it 'succesful', :vcr do
       connection.connect
-      expect(connection.write(message).code).to eql '200'
-      # connection.check_for_error(message)
+      connection.write(message)
+      # TODO: expect(connection.write(message).code).to eql '200'
+    end
+
+    it 'fails and should Retry-After', :vcr do
+      expect_any_instance_of(Pushr::Daemon::GcmSupport::ConnectionGcm).to receive(:sleep)
+      connection.connect
+      connection.write(message)
+    end
+
+    it 'fails and should Retry-After with date', :vcr do
+      expect_any_instance_of(Pushr::Daemon::GcmSupport::ConnectionGcm).to receive(:sleep)
+      connection.connect
+      connection.write(message)
+    end
+
+    it 'fails and should sleep after fail', :vcr do
+      expect_any_instance_of(Pushr::Daemon::GcmSupport::ConnectionGcm).to receive(:sleep)
+      connection.connect
+      connection.write(message)
+    end
+
+    it 'fails of a json formatting execption', :vcr do
+      connection.connect
+      connection.write(message)
+      # TODO: assert
+    end
+
+    it 'fails of a not authenticated execption', :vcr do
+      connection.connect
+      connection.write(message)
+      # TODO: assert
     end
   end
 end
