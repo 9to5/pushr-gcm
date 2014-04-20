@@ -1,5 +1,6 @@
 require 'net/http'
 require 'net/https'
+require 'active_model'
 require 'pushr-gcm/version'
 require 'pushr/configuration'
 require 'pushr/configuration_gcm'

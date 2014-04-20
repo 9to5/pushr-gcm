@@ -23,7 +23,7 @@ describe Pushr::MessageGcm do
     end
 
     it 'should return true' do
-      expect(message.save).to be_true
+      expect(message.save).to eql true
     end
     it 'should save a message' do
       message.save
@@ -36,19 +36,19 @@ describe Pushr::MessageGcm do
     it 'should contain not more than 1000 registration_ids' do
       hsh = { app: 'app_name', registration_ids: ('a' * 1001).split(//) }
       message = Pushr::MessageGcm.new(hsh)
-      expect(message.save).to be_false
+      expect(message.save).to eql false
     end
 
     it 'should contain more than 0 registration_ids' do
       hsh = { app: 'app_name', registration_ids: [] }
       message = Pushr::MessageGcm.new(hsh)
-      expect(message.save).to be_false
+      expect(message.save).to eql false
     end
 
     it 'should contain an array in registration_ids' do
       hsh = { app: 'app_name', registration_ids: nil }
       message = Pushr::MessageGcm.new(hsh)
-      expect(message.save).to be_false
+      expect(message.save).to eql false
     end
   end
 end
