@@ -4,7 +4,7 @@ require 'pushr/message_gcm'
 describe Pushr::MessageGcm do
 
   before(:each) do
-    Pushr.configure do |config|
+    Pushr::Core.configure do |config|
       config.redis = ConnectionPool.new(size: 1, timeout: 1) { MockRedis.new }
     end
   end
