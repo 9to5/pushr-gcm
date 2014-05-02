@@ -42,7 +42,7 @@ module Pushr
     end
 
     def data_size
-      errors.add(:data, 'is more thank 4kb') if data && MultiJson.dump(data).bytes.size > 4096
+      errors.add(:data, 'is more thank 4kb') if data && MultiJson.dump(data).bytes.count > 4096
     end
   end
 end
