@@ -10,6 +10,6 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-gem 'pushr-core', path: '../pushr-core'
+gem 'pushr-core', github: '9to5/pushr-core'
 gem 'coveralls', require: false
 gem 'rubocop'
