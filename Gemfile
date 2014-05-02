@@ -11,6 +11,6 @@ gemspec
 # your gem to rubygems.org.
 
 gem 'rake'
-gem 'pushr-core', github: '9to5/pushr-core'
+gem 'pushr-core', github: '9to5/pushr-core', branch: 'develop'
 gem 'coveralls', require: false
 gem 'rubocop'
