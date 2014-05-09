@@ -12,11 +12,14 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/9to5/pushr-gcm'
   s.summary     = 'GCM (Android) part of the modular push daemon.'
   s.description = 'GCM support for the modular push daemon.'
+  s.licenses    = ['MIT']
 
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.files         = `git ls-files lib`.split("\n") + ['README.md', 'MIT-LICENSE']
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
+
+  s.required_ruby_version = '>= 1.9.3'
 
   s.add_runtime_dependency 'multi_json'
   s.add_runtime_dependency 'pushr-core'
