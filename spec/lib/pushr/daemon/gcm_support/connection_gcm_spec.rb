@@ -1,11 +1,10 @@
 require 'spec_helper'
 require 'pushr/daemon'
+require 'pushr/gcm'
 require 'pushr/daemon/logger'
 require 'pushr/message_gcm'
 require 'pushr/configuration_gcm'
 require 'pushr/daemon/delivery_error'
-require 'pushr/daemon/gcm_support/response_handler'
-require 'pushr/daemon/gcm_support/connection_gcm'
 
 describe Pushr::Daemon::GcmSupport::ConnectionGcm do
 

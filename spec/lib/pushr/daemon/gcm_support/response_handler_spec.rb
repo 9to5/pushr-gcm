@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'pushr/daemon'
+require 'pushr/gcm'
 require 'pushr/feedback_gcm'
 require 'pushr/message_gcm'
-require 'pushr/daemon/gcm_support/response_handler'
 
 describe Pushr::Daemon::GcmSupport::ResponseHandler do
   it 'should handle no errors' do
