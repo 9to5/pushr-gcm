@@ -7,8 +7,6 @@ describe Pushr::Daemon::Gcm do
 
   describe 'responds to' do
     it 'configuration' do
-      expect(gcm.connectiontype).to eql(Pushr::Daemon::GcmSupport::ConnectionGcm)
-      expect(gcm.stop).to eql(true)
       expect(gcm.configuration).to eql(test: 'test')
     end
   end
