@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pushr/daemon'
 require 'pushr/configuration_gcm'
 
 describe Pushr::ConfigurationGcm do
@@ -8,9 +7,7 @@ describe Pushr::ConfigurationGcm do
     Pushr::Core.configure do |config|
       config.redis = ConnectionPool.new(size: 1, timeout: 1) { MockRedis.new }
     end
-    Pushr::Daemon.config = settings
   end
-  let(:settings) { Pushr::Daemon::Settings.new }
 
   describe 'all' do
     it 'returns all configurations' do
