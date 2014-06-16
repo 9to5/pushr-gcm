@@ -1,6 +1,6 @@
 module Pushr
   class ConfigurationGcm < Pushr::Configuration
-    attr_accessor :id, :type, :app, :enabled, :connections, :api
+    attr_accessor :api
     validates :api, presence: true
 
     def name
