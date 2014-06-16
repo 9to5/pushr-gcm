@@ -21,11 +21,11 @@ module Pushr
       MultiJson.dump(hsh)
     end
 
-    def to_json
+    def to_hash
       hsh = { type: self.class.to_s, app: app, registration_ids: registration_ids, notification_key: notification_key,
               collapse_key: collapse_key, delay_while_idle: delay_while_idle, time_to_live: time_to_live, data: data }
       hsh[Pushr::Core.external_id_tag] = external_id if external_id
-      MultiJson.dump(hsh)
+      hsh
     end
 
     private
