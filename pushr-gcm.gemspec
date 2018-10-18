@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.2.0'
 
   s.add_runtime_dependency 'multi_json'
   s.add_runtime_dependency 'pushr-core'
@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-rspec'
   s.add_development_dependency 'mock_redis'
   s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'webmock', '< 1.16'
+  s.add_development_dependency 'webmock'
   s.add_development_dependency 'vcr'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'coveralls'
